@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Hall Food Ticket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .booking-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 45%;
+      margin: 10px 5px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .logout {
+      background-color: red;
+    }
+
+    .logout:hover {
+      background-color: darkred;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      width: 90%;
+      max-width: 300px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    #hallSelect {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    #errorText {
+      color: red;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="booking-container">
+    <h2>Select Your Meal</h2>
+    <p>Book a ticket for Lunch or Dinner.</p>
+    <button onclick="showConfirm('Lunch')">Book Lunch</button>
+    <button onclick="showConfirm('Dinner')">Book Dinner</button>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Modal -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <p id="confirmText"></p>
+      <select id="hallSelect">
+        <option value="">Select Hall</option>
+        <option value="Shahidul Hall">Shahidul Hall</option>
+        <option value="Selim Hall">Selim Hall</option>
+        <option value="Zia Hall">Zia Hall</option>
+        <option value="Bangabandhu Hall">Bangabandhu Hall</option>
+      </select>
+      <div class="modal-buttons">
+        <button onclick="confirmBooking()">Yes</button>
+        <button onclick="closeModal()">No</button>
+      </div>
+      <p id="errorText"></p>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem("loggedIn") !== "true") {
+      alert("You must log in first!");
+      window.location.href = "index.html";
+    }
+
+    let selectedMeal = "";
+
+    function showConfirm(meal) {
+      const now = new Date();
+      const hour = now.getHours();
+
+      if (meal === "Lunch") {
+        if (!((hour >= 20 && hour <= 23) || hour < 10)) {
+          alert("Lunch tickets can only be booked from 8:00 PM to 10:00 AM.");
+          return;
+        }
+      }
+
+      if (meal === "Dinner") {
+        if (!((hour >= 20 && hour <= 23) || hour < 18)) {
+          alert("Dinner tickets can only be booked from 8:00 PM to 6:00 PM.");
+          return;
+        }
+      }
+
+      selectedMeal = meal;
+      document.getElementById("confirmText").textContent = `Confirm booking for ${meal}?`;
+      document.getElementById("hallSelect").value = "";
+      document.getElementById("errorText").textContent = "";
+      document.getElementById("confirmationModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("confirmationModal").style.display = "none";
+    }
+
+    function confirmBooking() {
+      const selectedHall = document.getElementById("hallSelect").value;
+      const errorText = document.getElementById("errorText");
+
+      if (!selectedHall) {
+        errorText.textContent = "Please select a hall!";
+        return;
+      }
+
+      const today = new Date();
+      const dateString = today.toLocaleDateString("en-GB");
+      const ticketID = "TICKET-" + Math.floor(Math.random() * 1000000);
+      const ticket = {
+        meal: selectedMeal,
+        hall: selectedHall,
+        date: dateString,
+        ticketID: ticketID,
+        status: "Pending"
+      };
+
+      localStorage.setItem("mealTicket", JSON.stringify(ticket));
+      window.location.href = "pyment.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      alert("Logged out successfully!");
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>

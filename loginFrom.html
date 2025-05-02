@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Hall Food Ticket Booking</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 1;
+      background: white;
+      padding: 40px 30px 30px 30px;
+      padding-top: 100px; /* extra space for the logo */
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      max-width: 90%;
+      animation: fadeIn 0.6s ease-in-out;
+      text-align: center;
+    }
+
+    .ruet-logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 12px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+
+    input:focus {
+      border-color: #74ebd5;
+      outline: none;
+    }
+
+    button {
+      background: linear-gradient(135deg, #28a745, #218838);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #218838, #1e7e34);
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <img src="https://www.sanirepo.com/uploads/users/images/ruet-1686992768.jpg" alt="RUET Logo" class="ruet-logo" />
+    <h2>Login to Book Tickets</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Enter your Gmail" required />
+      <input type="password" id="password" placeholder="Enter your password" required />
+      <p id="errorMessage" class="error"></p>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      let email = document.getElementById("email").value;
+      let password = document.getElementById("password").value;
+      let errorMessage = document.getElementById("errorMessage");
+
+      if (!email.endsWith("@gmail.com")) {
+        errorMessage.textContent = "Please enter a valid Gmail address!";
+        return;
+      }
+
+      if (email === "admin@gmail.com" && password === "admin123") {
+        localStorage.setItem("loggedIn", "true");
+        alert("Login Successful! Redirecting to booking page...");
+        window.location.href = "booking.html";
+      } else {
+        errorMessage.textContent = "Invalid email or password!";
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Options</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .payment-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .ticket-info {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .payment-button {
+      background-color: #d1006c;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      margin: 10px 5px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 45%;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .payment-button:hover {
+      background-color: #b3005a;
+    }
+
+    .rocket {
+      background-color: #4a148c;
+    }
+
+    .rocket:hover {
+      background-color: #320d61;
+    }
+
+    .cancel-button {
+      background-color: #dc3545;
+    }
+
+    .cancel-button:hover {
+      background-color: #a71d2a;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="payment-container">
+    <h2>Choose Payment Method</h2>
+    <div class="ticket-info" id="ticketInfo"></div>
+    <button class="payment-button" onclick="makePayment('bKash')">Pay with bKash</button>
+    <button class="payment-button rocket" onclick="makePayment('Rocket')">Pay with Rocket</button>
+    <button class="payment-button cancel-button" onclick="cancelTicket()">Cancel Ticket</button>
+  </div>
+
+  <script>
+    const ticket = JSON.parse(localStorage.getItem("mealTicket"));
+
+    if (!ticket) {
+      alert("No meal ticket found. Redirecting to booking page...");
+      window.location.href = "booking.html";
+    }
+
+    document.getElementById("ticketInfo").innerHTML = `
+      <p><strong>Meal:</strong> ${ticket.meal}</p>
+      <p><strong>Hall:</strong> ${ticket.hall}</p>
+      <p><strong>Date:</strong> ${ticket.date}</p>
+      <p><strong>Ticket ID:</strong> ${ticket.ticketID}</p>
+      <p><strong>Status:</strong> ${ticket.status}</p>
+    `;
+
+    function makePayment(method) {
+      ticket.status = `Paid via ${method}`;
+      localStorage.setItem("mealTicket", JSON.stringify(ticket));
+      alert(`Payment successful via ${method}!`);
+      window.location.href = "ticket.html";
+    }
+
+    function cancelTicket() {
+      if (confirm("Are you sure you want to cancel this ticket?")) {
+        localStorage.removeItem("mealTicket");
+        alert("Ticket cancelled successfully.");
+        window.location.href = "booking.html";
+      }
+    }
+  </script>
+
+</body>
+</html>
